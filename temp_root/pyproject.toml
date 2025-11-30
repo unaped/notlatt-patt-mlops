@@ -1,0 +1,32 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "notlatt_patt_mlops"
+version = "0.0.1"
+description = "ITU MLOps 2025 project by Notlatt Patt"
+authors = [
+  { name = "Notlatt Patt" },
+]
+
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    
+]
+requires-python = "==3.11.5"
+
+
+[tool.ruff]
+line-length = 99
+src = ["notlatt_patt_mlops"]
+include = ["pyproject.toml", "notlatt_patt_mlops/**/*.py"]
+
+[tool.ruff.lint]
+extend-select = ["I"]  # Add import sorting
+
+[tool.ruff.lint.isort]
+known-first-party = ["notlatt_patt_mlops"]
+force-sort-within-sections = true
+
