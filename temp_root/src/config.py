@@ -9,6 +9,10 @@ ARTIFACTS_DIR = "./models"
 RANDOM_STATE = 42
 TEST_SIZE = 0.15
 
+# MLflow configuration
+MODEL_NAME = "lead_prediction_model"
+DEFAULT_MODEL_VERSION = 1
+
 # Model hyperparameters
 XGBOOST_PARAMS = {
     "learning_rate": uniform(1e-2, 3e-1),
