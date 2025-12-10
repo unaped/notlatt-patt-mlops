@@ -9,7 +9,7 @@ import (
 )
 
 // Prepare the source directory
-func setupSource(client *dagger.Client) (*dagger.Directory, *dagger.Directory) {
+func setupSource(client *dagger.Client) *dagger.Directory {
 	source := client.Host().Directory("..", dagger.HostDirectoryOpts{
 		Exclude: []string{
 			"dagger/",
@@ -21,14 +21,11 @@ func setupSource(client *dagger.Client) (*dagger.Directory, *dagger.Directory) {
 		},
 	})
 	
-	// This won't be necessary for the final project structure (.git file is not present within temp_root but is required for the workflow)
-	gitDir := client.Host().Directory("../../.git")
-	
-	return source, gitDir
+	return source
 }
 
 //  Build the base Python container with dependencies
-func buildPythonContainer(client *dagger.Client, source, gitDir *dagger.Directory) *dagger.Container {
+func buildPythonContainer(client *dagger.Client, source *dagger.Directory) *dagger.Container {
 	// Build base image with pip upgrade
 	pythonBase := client.Container().
 		From("python:3.11.5").
@@ -42,7 +39,6 @@ func buildPythonContainer(client *dagger.Client, source, gitDir *dagger.Director
 	// Mount source code and pull data
 	pythonContainer := pythonWithDeps.
 		WithDirectory("/pipeline", source).
-		WithDirectory("/pipeline/.git", gitDir).
 		WithWorkdir("/pipeline").
 		WithExec([]string{"dvc", "pull"})
 
@@ -138,8 +134,8 @@ func Run() error {
 	fmt.Println("Starting ML Pipeline...")
 
 	// Setup
-	source, gitDir := setupSource(client)
-	container := buildPythonContainer(client, source, gitDir)
+	source := setupSource(client)
+	container := buildPythonContainer(client, source)
 
 	// Execute pipeline stages
 	container, err = runPreprocessing(ctx, container)
