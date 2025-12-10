@@ -5,11 +5,11 @@ CURRENT_DATE = datetime.datetime.now().strftime("%Y_%B_%d")
 DATA_GOLD_PATH = "./data/processed/train_data_gold.csv"
 DATA_VERSION = "00000"
 EXPERIMENT_NAME = CURRENT_DATE
-ARTIFACTS_DIR = "./models"
 RANDOM_STATE = 42
 TEST_SIZE = 0.15
 
 # MLflow configuration
+ARTIFACT_PATH = "model"
 MODEL_NAME = "lead_prediction_model"
 DEFAULT_MODEL_VERSION = 1
 

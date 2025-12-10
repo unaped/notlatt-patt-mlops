@@ -5,8 +5,7 @@ import mlflow
 from mlflow.tracking.client import MlflowClient
 from mlflow.entities.model_registry.model_version_status import ModelVersionStatus
 
-from src.config import EXPERIMENT_NAME, MODEL_NAME, ARTIFACTS_DIR
-
+from src.config import EXPERIMENT_NAME, MODEL_NAME, ARTIFACT_PATH
 
 def wait_until_ready(model_name, model_version, max_attempts=10):
     """Wait until model version is ready in the registry."""
@@ -131,7 +130,7 @@ def register_model(run_id, model_name, artifact_path):
     return model_details_dict
 
 
-def select_and_register_best_model(experiment_name=EXPERIMENT_NAME, model_name=MODEL_NAME, artifact_path=ARTIFACTS_DIR):
+def select_and_register_best_model(experiment_name=EXPERIMENT_NAME, model_name=MODEL_NAME, artifact_path=ARTIFACT_PATH):
     """Complete model selection and registration pipeline."""
     print("\n=== Starting Model Selection ===")
     
