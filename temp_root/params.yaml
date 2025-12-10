@@ -1,0 +1,69 @@
+directories:
+  artifact_dir: artifacts
+  raw_data_dir: ./data
+  silver_data_dir: ./data
+  gold_data_dir: ./data
+
+files:
+  raw_data: raw_data.csv
+
+schema:
+  target_col: lead_indicator
+  date_column: date_part
+  id_column: lead_id
+
+  categorical_features:
+    - lead_id
+    - lead_indicator
+    - date_part
+    - source 
+    - customer_group
+    - onboarding
+    - customer_code
+  continuous_features:
+    - purchases
+    - time_spent
+    - n_visits
+
+filtering:
+  min_date: "2024-01-01"
+  max_date: "2024-01-31"
+  source_filter: signup
+
+cleaning:
+  columns_to_drop:
+    - is_active
+    - marketing_consent
+    - first_booking
+    - existing_customer
+    - last_seen
+    - domain
+    - country 
+    - visited_learn_more_before_booking
+    - visited_faq
+  
+  # Outlier Logic
+  outlier_threshold: 2
+  
+  # Imputation Logic
+  imputation_strategy: mean   # Options: mean, median
+  custom_imputation_values:   # Was "special_rules"
+    customer_code: "None"
+
+feature_engineering:
+  source_binning_map:
+    li: socials
+    fb: socials
+    organic: group1
+    signup: group1
+
+  drop_features:
+    - lead_id
+    - date_part
+    - customer_code
+
+  test_size: 0.15
+  random_state: 42
+
+  scaler_path: scaler.pkl
+  output_path: gold_data.csv
