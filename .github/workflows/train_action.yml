@@ -22,10 +22,10 @@ jobs:
         run: cd dagger && go run main.go
 
       - name: Upload Model Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.4.0
         with:
           name: model
           path: ./models/lead_model_lr.pkl
 
-      - name: Run Model Validator
+      - name: Run Model Inference Test Action
         uses: lasselundstenjensen/itu-sdse-project-model-validator@main
