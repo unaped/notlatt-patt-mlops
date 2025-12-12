@@ -18,6 +18,9 @@ jobs:
         with:
           go-version: '1.24'
 
+      - name: Install Go Dependencies
+        run: cd dagger && go mod download
+
       - name: Run Dagger Pipeline
         run: go run dagger/main.go
 
