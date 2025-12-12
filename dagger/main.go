@@ -20,11 +20,11 @@ func setupSource(client *dagger.Client) *dagger.Directory {
 			".venv/",
 		},
 	})
-	
+
 	return source
 }
 
-//  Build the base Python container with dependencies
+// Build the base Python container with dependencies
 func buildPythonContainer(client *dagger.Client, source *dagger.Directory) *dagger.Container {
 	// Build base image with pip upgrade
 	pythonBase := client.Container().
@@ -40,7 +40,7 @@ func buildPythonContainer(client *dagger.Client, source *dagger.Directory) *dagg
 	pythonContainer := pythonWithDeps.
 		WithDirectory("/pipeline", source).
 		WithWorkdir("/pipeline").
-		WithExec([]string{"dvc", "pull"})
+		WithExec([]string{"dvc", "update", "data/raw/raw_data.csv.dvc"})
 
 	return pythonContainer
 }
@@ -48,56 +48,56 @@ func buildPythonContainer(client *dagger.Client, source *dagger.Directory) *dagg
 // Execute the data preprocessing step
 func runPreprocessing(ctx context.Context, container *dagger.Container) (*dagger.Container, error) {
 	fmt.Println("\nStep 1: Data Preprocessing")
-	
+
 	preprocessContainer, err := container.
 		WithExec([]string{"python", "-m", "src.preprocessing"}).
 		Sync(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("preprocessing failed: %w", err)
 	}
-	
+
 	return preprocessContainer, nil
 }
 
 // Run the model training step
 func runTraining(ctx context.Context, container *dagger.Container) (*dagger.Container, error) {
 	fmt.Println("\nStep 2: Model Training")
-	
+
 	trainContainer, err := container.
 		WithExec([]string{"python", "-m", "src.modeling.train"}).
 		Sync(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("training failed: %w", err)
 	}
-	
+
 	return trainContainer, nil
 }
 
 // Execute the model selection step
 func runSelection(ctx context.Context, container *dagger.Container) (*dagger.Container, error) {
 	fmt.Println("\nStep 3: Model Selection")
-	
+
 	selectContainer, err := container.
 		WithExec([]string{"python", "-m", "src.modeling.select"}).
 		Sync(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("model selection failed: %w", err)
 	}
-	
+
 	return selectContainer, nil
 }
 
 // Execute the model deployment step
 func runDeployment(ctx context.Context, container *dagger.Container) (*dagger.Container, error) {
 	fmt.Println("\nStep 4: Model Deployment")
-	
+
 	deployContainer, err := container.
 		WithExec([]string{"python", "-m", "src.modeling.deploy"}).
 		Sync(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("deployment failed: %w", err)
 	}
-	
+
 	return deployContainer, nil
 }
 
