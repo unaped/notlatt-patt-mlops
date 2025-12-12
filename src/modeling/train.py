@@ -61,7 +61,7 @@ def train_all_models():
     xgboost_grid = train_xgboost(X_train, y_train, XGBOOST_PARAMS)
     xgboost_model = xgboost_grid.best_estimator_
     xgboost_model_path = "./models/lead_model_xgboost.json"
-    xgboost_model.save_model(xgboost_model_path)
+    joblib.dump(xgboost_model, xgboost_model_path)    
     
     xgb_results = evaluate_model(xgboost_grid, X_train, X_test, y_train, y_test, "XGBoost")
     model_results[xgboost_model_path] = xgb_results['classification_report']
