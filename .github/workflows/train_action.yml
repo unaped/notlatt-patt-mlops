@@ -21,6 +21,9 @@ jobs:
       - name: Run Dagger Pipeline
         run: cd dagger && go run main.go
 
+      - name: Rename Model File
+        run: mv .models/lead_model_lr.pkl .models/model.pkl 
+
       - name: Upload Model Artifact
         uses: actions/upload-artifact@v4.4.0
         with:
