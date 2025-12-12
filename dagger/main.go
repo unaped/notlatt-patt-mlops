@@ -40,7 +40,7 @@ func buildPythonContainer(client *dagger.Client, source *dagger.Directory) *dagg
 	pythonContainer := pythonWithDeps.
 		WithDirectory("/pipeline", source).
 		WithWorkdir("/pipeline").
-		WithExec([]string{"dvc", "pull"})
+		WithExec([]string{"dvc", "update data/raw/raw_data.csv.dvc"})
 
 	return pythonContainer
 }
