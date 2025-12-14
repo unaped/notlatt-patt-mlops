@@ -42,11 +42,11 @@ Running the machine learning pipeline implemented by this project can be done in
 
 Simply clone the repository with your terminal using your preferred method (i.e. HTTPS), by running: `git clone https://github.com/unaped/notlatt-patt-mlops.git` 
 
-Then, go to the newly created directory: `cd notlatt-patt-mlops`, and lastly, run: `go run dagger/main.go`
+Then, go to the newly created directory: `cd notlatt-patt-mlops/dagger`, and lastly, run: `go run main.go`
 
 This will kick off the Dagger workflow that orchestrates the source Python code to create the model artifact we are interested in, and store it under `models/`. 
 
->**Note:** You will need Go 1.24+ installed on your machine in order to be able to run the code locally without conflicts. 
+>**Note:** You will need Docker installed and running in your device, as well as Go 1.24+ installed on it in order to be able to run the code locally without conflicts. 
 
 ### 2. Remotely
 
