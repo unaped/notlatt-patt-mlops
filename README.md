@@ -1,78 +1,65 @@
-# ITU BDS MLOPS'25 - Project
+# Notlatt Patt's ITU BDS MLOPS'25 Project
 
-## Task
+## About the structure
 
-Based on the input provided (see below), fork the repository and restructure the code to adhere to the concepts and ideas you have seen throughout the course.  The diagram below provides a detailed overview of the structure that the solution is expected to follow.   
+We follow the approach to standard data science MLOps project structure recommended by CCDS, comprising several components: 
+
+
+- `.dvc/`: DVC configuration for data version control
+- `.github/workflows/`: Stores GitHub Actions for CI/CD 
+  - `ml_pipeline.yml`: ML Pipeline's action configuration and definitions
+- `dagger/`:  Go-based Dagger workflow for ML pipeline orchestration
+  - `main.go`: Dagger pipeline implementation with modular stage functions
+  - `go.mod`: Go module dependencies declaration
+  - `go.sum`: Go dependency checksums for reproducibility
+- `data/`: Data directory following CCDS approach
+  - `raw/`: Stores original, immutable datasets
+    - `raw_data.csv.dvc`: DVC pointer to raw training data
+  - `interim/`: Stores intermediate, transformed data and preprocessing artifacts
+  - `processed/`: Stores final, cleaned datasets ready for modeling
+- `docs/`: Project documentation files
+- `models/`: Stores trained model artifacts and preprocessing objects
+- `src/`: Source code for the ML pipeline
+  - `modeling/`: Decomposition of model building files
+    - `train.py`: Model training orchestration with MLflow logging
+    - `models.py`: Model definitions and custom wrappers
+    - `evaluate.py`: Model evaluation metrics and reporting
+    - `select.py`: Model selection and MLflow registry management
+    - `predict.py`: Model inference logic
+    - `deploy.py`: MLflow model stage transitions and deployment
+  - `config.py`: Centralized configuration and constants
+  - `preprocessing.py`: Data cleaning, feature selection, and standardization
+  - `features.py`: Feature engineering and transformation logic
+
+- `.gitignore`: Git ignore patterns
+- `requirements.txt`: Python dependencies for the project
+
+## How to run the code
+
+Running the machine learning pipeline implemented by this project can be done in two simple ways.
+
+### 1. Locally 
+
+Simply clone the repository with your terminal using your preferred method (i.e. HTTPS), by running: `git clone https://github.com/unaped/notlatt-patt-mlops.git` 
+
+Then, go to the newly created directory: `cd notlatt-patt-mlops`, and lastly, run: `go run dagger/main.go`
+
+This will kick off the Dagger workflow that orchestrates the source Python code to create the model artifact we are interested in, and store it under `models/`. 
+
+>**Note:** You will need Go 1.24+ installed on your machine in order to be able to run the code locally without conflicts. 
+
+### 2. Remotely
+
+Alternatively, you can also take advantage of the implemented CI/CD action that triggers and executes the entire pipeline too, whenever code is pushed to a remote Github repository (or to a pull request for that repository). 
+
+To do so, first fork this repository and clone it in your local machine, for instance, as described in the above section. Then, work on your machine to add whatever you deem necessary and push your changes. 
+
+After doing that you will see a Github Action running and its logs, which you can check for any potential errors or conflicts that may arise due to your changes. 
+
+If the pipeline doesn't crash due to newly introduced conflicts, you will be able to download the model artifact by going to the Summary tab within the Action run. 
+
+## Conclusion
+
+In short, it can be concluded that the project successfully applied the suggested architecture for implementing a machine learning pipeline capable of building a model artifact, as such: 
 
 ![Project architecture](./docs/project-architecture.png)
-
-For the exam submission, we expect you to submit a pdf containing:
-- the list of members of the group
-- the link to the github.com public repository hosting your solution
-  - following the above, there is *no need* to invite the teaching staff as collaborators
-
-The repository linked in the submission should contain:
-
-- A README.md file that describes the project
-- GitHub automation workflow
-- Dagger workflow (in Go)
-- All history
-
-
-## Inputs
-
-You are given the following material:
-- Python monolith (see `notebooks` folder)
-- Raw input data (see `notebooks/artifacts` folder)
-- GitHub action to test model inference (see [`model-validator`](https://github.com/lasselundstenjensen/itu-sdse-project-model-validator) action)
-
-## Outputs
-
-- Your GitHub repository (including all history)
-  - A README.md file that describes the project
-  - GitHub automation workflow
-  - Dagger workflow (in Go)
-- Model artifact produced by GitHub workflow and named 'model'
-
-> **NOTE:**
-> The Dagger workflow can be run locally or inside the GitHub workflow—both are viable options during development.
->
-> The Dagger workflow can run locally and can also be made to produce outputs locally during development. But when wrapping the Dagger workflow in a GitHub workflow, the output is instead stored inside the GitHub runner (i.e. a virtual machine).
->
-> Use the publicly available [`actions/upload-artifact`](https://github.com/actions/upload-artifact) to store the model artifact in the GitHub worklow pipeline.
->
-> This model artifact can then be picked up by the [action provided](https://github.com/lasselundstenjensen/itu-sdse-project-model-validator), which will run some inference tests to ensure that the correct model was trained.
-
-
-## How will we assess
-
-Below, we provide information on how we will assess the submission clustered around several aspects.  The list relates to groups of size 3; if your group is of size 4, you are expected also to work on the optional items, i.e., to use pull requests and to provide tests.
-
-#### Versioning
-
-- Use of Git (semantic commit messages, branches, branch longevity, commit frequency/size)
-- Management of data
-- Use of pull requests (OPTIONAL)
-
-#### Programming
-
-- Decomposition of Python notebook
-- Adherance to standard data science MLOps project structure
-- Presence of tests (OPTIONAL)
-
-#### Workflow automation
-
-- Presence of a workflow that trains the model
-- Presence of a workflow that tests the model
-- Structure of Dagger workflow
-- Orchestration of Dagger workflow through GitHub workflow
-
-#### Documentation (README.md)
-
-- Description of project structure
-- How to run the code and generate the model artifact
-
-
-## Questions
-
-If you have any questions about the information shared here, please feel free to post them on Learnit. Answers to private emails on this topic will also be shared on Learnit, along with the original email content, so that everyone has access to the same information.
